@@ -1,14 +1,16 @@
 <?php
 namespace Kolesa\Clockwork;
 
+use App\DI;
 use Kolesa\Clockwork\Listeners\Application;
 use Clockwork\Clockwork;
 use Kolesa\Clockwork\DataSource\Phalcon;
 use Phalcon\Events\Manager;
-use Phalcon\Mvc\User\Component;
 use Phalcon\Config as PhalconConfig;
+use Phalcon\Di\Injectable;
+use Phalcon\Events\ManagerInterface;
 
-class ClockworkServices extends Component
+class ClockworkServices extends Injectable
 {
     /**
      * Default listeners
@@ -27,6 +29,13 @@ class ClockworkServices extends Component
     protected $defaultDataSource = [
         Phalcon::class
     ];
+
+    /**
+     * EventsManager.
+     *
+     * @var \Phalcon\Events\Manager
+     */
+    protected $eventsManager;
 
     /**
      * Init Clockwork
@@ -107,5 +116,24 @@ class ClockworkServices extends Component
 
             $eventsManager->attach($event, new $listener);
         }
+    }
+
+
+    /**
+     * @param \Phalcon\Events\Manager $eventsManager
+     */
+    public function setEventsManager(ManagerInterface $eventsManager)
+    {
+        $this->eventsManager = $eventsManager;
+    }
+
+    /**
+     * Return EventsManager.
+     *
+     * @return \Phalcon\Events\Manager
+     */
+    public function getEventsManager()
+    {
+        return $this->eventsManager;
     }
 }
